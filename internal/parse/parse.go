@@ -86,44 +86,24 @@ func loadConfig(path string, file string) (types.RuleFile, error) {
 
 func extractCustomMetrics(in types.RuleFile) []string {
 	var out []string
-	artefacts := []string{"{", "=="} // TODO: make the regex not contain some control characters liste here
 
 	for _, group := range in.Groups {
 		for _, rule := range group.Rules {
 
-			if !(strings.Contains(rule.Expr, "{")) {
-				var pattern = regexp.MustCompile(`(?P<Metric>[a-zA-Z_:][a-zA-Z0-9_:][^{}]*)\w?==`)
-				for _, item := range pattern.FindAllString(rule.Expr, -1) {
-
-					// remove control chars
-					for _, x := range artefacts {
-						if strings.Contains(item, x) {
-							item = removeChar(item, x)
-						}
+			re := regexp.MustCompile(`(?P<Metric>[a-zA-Z_:][a-zA-Z0-9_:]*)`)
+			groupNames := re.SubexpNames()
+			for _, match := range re.FindAllStringSubmatch(rule.Expr, -1) {
+				for groupIdx, matchgroup := range match {
+					name := groupNames[groupIdx]
+					if name == "" { // skip the non-named match
+						continue
 					}
-					item = strings.TrimSpace(item)
-					out = append(out, item)
-				}
-			} else {
-				// extract metrics that defines labels
-				var pattern = regexp.MustCompile(`(?m)(?P<Metric>[a-zA-Z_:][a-zA-Z0-9_:]*)\{`)
-
-				for _, item := range pattern.FindAllString(rule.Expr, -1) {
-
-					// remove control chars
-					for _, x := range artefacts {
-						if strings.Contains(item, x) {
-							item = removeChar(item, x)
-						}
-					}
-
-					out = append(out, item)
+					matchgroup = strings.TrimSpace(matchgroup)
+					out = append(out, matchgroup)
 				}
 			}
-
 		}
 	}
-
 	return out
 }
 
