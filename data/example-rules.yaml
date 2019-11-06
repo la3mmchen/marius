@@ -1,0 +1,42 @@
+---
+groups:
+  - name: "basics"
+    rules:
+
+    - alert: ScrapeTargetDown
+      expr: 'up == 0'
+      for: '5m'
+      labels:
+        severity: 'warning'
+        layer: 'monitoring'
+        runbook: 'https://docu.example.de/confluence/display/Runbooks'
+        page: 'true'
+      annotations:
+        summary: 'Sracping from Instance {{ $labels.instance }} not possible'
+        description: 'The instance has been not scraped for metrics more than 5 minutes. This indicates either connectivity issues or a problem on the instance.'
+
+    - alert: 'MemoryUsage'
+      expr: '((node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Cached_bytes)) * 100 / node_memory_MemTotal_bytes) >= 98'
+      for: 5m
+      labels:
+        severity: 'warning'
+        layer: 'os'
+        runbook: 'https://docu.example.de/confluence/display/SMEP/Runbooks'
+        chart: 'http://grafana.intern.example.com/d/HczYVujik/node-exporter-full?orgId=1&var-node={{ $labels.instance | reReplaceAll "(.*):.*" "$1" }}&var-port={{ $labels.instance | reReplaceAll ".*:(.*)" "$1" }}'
+        page: 'false'
+      annotations:
+        summary: '{{ $labels.instance }}: Memory mostly in-use.'
+        description: 'The instance has allocated most of its memory (over 98%)'
+
+    - alert: 'CPULoad'
+      expr: 'node_load1 >= 12'
+      for: '15m'
+      labels:
+        severity: 'warning'
+        layer: 'os'
+        runbook: 'https://docu.example.de/confluence/display/SMEP/Runbooks'
+        chart: 'http://grafana.intern.example.com/d/HczYVujik/node-exporter-full?orgId=1&var-node={{ $labels.instance | reReplaceAll "(.*):.*" "$1" }}&var-port={{ $labels.instance | reReplaceAll ".*:(.*)" "$1" }}'
+        page: 'false'
+      annotations:
+        summary: '{{ $labels.instance }}: CPULoad High'
+        description: 'High CPU usage on this instance.'

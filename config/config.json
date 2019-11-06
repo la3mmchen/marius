@@ -1,0 +1,8 @@
+{
+    "AppUsage": "Create templates for unit test from existing prometheus alert rules.",
+    "AppName": "marius",
+    "DataPath": "data/",
+    "TemplatePath": "config/template.tpl",
+    "OutputPath": "data/tests",
+    "Debug": false
+}
