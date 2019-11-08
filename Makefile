@@ -16,10 +16,10 @@ default: build run-help run-template
 build: 
 	@go build -o ${EXECUTABLE} -ldflags "-X main.GitCommit=${GIT_COMMIT}" .
 
-# .PHONY: docker
-# docker: 
-# 	docker build -t ${PROJECT}/${PROJECT_NAME}:${GIT_COMMIT} .
-# 	docker tag ${PROJECT}/${PROJECT_NAME}:${GIT_COMMIT} ${PROJECT}/${PROJECT_NAME}:latest
+.PHONY: docker
+docker: 
+	docker build --build-arg version=$(GIT_COMMIT) -t ${PROJECT}/${PROJECT_NAME}:${GIT_COMMIT} .
+	docker tag ${PROJECT}/${PROJECT_NAME}:${GIT_COMMIT} ${PROJECT}/${PROJECT_NAME}:latest
 
 run-help:
 	./${EXECUTABLE} --help
@@ -30,8 +30,8 @@ run-list:
 run-template:
 	./${EXECUTABLE} template
 
-# docker-run:
-#	docker run --rm -it ${PROJECT}/${PROJECT_NAME}:latest --help
+docker-run:
+	docker run --rm -it ${PROJECT}/${PROJECT_NAME}:latest --help
 
 prom: 
 	@echo "\n"
