@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: docker image
 on: [push]
 jobs:
 
@@ -10,3 +10,6 @@ jobs:
     - uses: actions/checkout@v1
     - name: docker build
       run: docker build --build-arg version=$(GIT_COMMIT) --file Dockerfile --tag la3mmchen/marius:latest .
+
+    - name: run app
+      run: docker run --rm -it la3mmchen/marius:latest
