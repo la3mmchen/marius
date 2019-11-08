@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -11,30 +10,30 @@ import (
 )
 
 var (
-	configFile string = "config/config.json"
-	GitCommit  string
+	configFile string = "config.json"
+	gitCommit  string
 )
 
 func main() {
-	var Cfg types.Configuration
-
-	dir, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-	// load config
-	file, err := os.Open(configFile)
-	if err != nil {
-		os.Exit(1)
-	}
-	decoder := json.NewDecoder(file)
-	err = decoder.Decode(&Cfg)
-	if err != nil {
-		os.Exit(1)
+	var Cfg = types.Configuration{
+		AppUsage:     "Create templates for unit test from existing prometheus alert rules.",
+		AppName:      "marius",
+		AppVersion:   gitCommit,
+		DataPath:     "data",
+		TemplatePath: "config/template.tpl",
+		OutputPath:   "data/tests",
+		Debug:        false,
 	}
 
-	Cfg.AppName = filepath.Base((dir))
-	Cfg.AppVersion = GitCommit
+	// load config if it is present
+	if _, err := os.Stat(filepath.Join(".", configFile)); !os.IsNotExist(err) {
+		file, err := os.Open(filepath.Join(".", configFile))
+		decoder := json.NewDecoder(file)
+		err = decoder.Decode(&Cfg)
+		if err != nil {
+			os.Exit(1)
+		}
+	}
 
 	app := commands.GetApp(Cfg)
 
