@@ -1,5 +1,7 @@
 # marius - a friendly prometheus rule test templater
 
+![](https://github.com/la3mmchen/marius/workflows/ci/badge.svg)
+
 Marius takes your prometheus rules and creates files for unittests from all of them.
 
 ## why
@@ -96,9 +98,10 @@ Marius is pretty much alpha. Be kind if it does not work :P
 
 - marius should create the test files under a definable path but right now is hard-coded to write into `data/`
 - marius does not replace alread integrated golang template within labels (e.g. annotations) - yet.
-- the parsing of the `expr` field from the rules will not gather all metrics so `input_series` is not populated correctly.
 - marius does not know what values a metric is providing so he just insert 0 values as the test data.
-- the docker build is broken
+- the docker build is broken. A Dockerfile is missing
+- there are no test cases for the golang code
+- no autmatic builds.
 
 ## appendix
 
