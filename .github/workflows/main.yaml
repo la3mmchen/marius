@@ -1,9 +1,25 @@
-name: build
+name: ci
 on: [push]
 
 jobs:
 
-  build:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: go test
+        run: go test .
+
+  go-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: go build
+        run: go build -o marius -ldflags "-X main.GitCommit=$ {{ github.sha }}" .
+      - name: run executable
+        run: ./marius --help
+
+  docker-build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -11,23 +27,9 @@ jobs:
       run: docker build --build-arg version=$(GIT_COMMIT) --file Dockerfile --tag la3mmchen/marius:latest .
     - name: run app
       run: docker run --rm -t la3mmchen/marius:latest
-  
-  test:
-    needs:
-      - build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: run app
-      run: docker run --rm -t la3mmchen/marius:latest    
-
 
   publish:
-    needs:
-      - test
-      
     if: github.ref == 'refs/heads/master'
-
     runs-on: ubuntu-latest
     steps:
     - name: docker push
