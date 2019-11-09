@@ -1,6 +1,6 @@
 # marius - a friendly prometheus rule test templater
 
-![](https://github.com/la3mmchen/marius/workflows/ci/badge.svg)
+![](https://github.com/la3mmchen/marius/actions)
 
 Marius takes your prometheus rules and creates files for unittests from all of them.
 
