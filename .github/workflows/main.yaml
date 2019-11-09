@@ -20,6 +20,7 @@ jobs:
         run: ./marius --help
 
   docker-build:
+    if: github.ref != 'refs/heads/master' ## do not run on master
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -35,7 +36,10 @@ jobs:
     - uses: actions/checkout@v1 
     - name: docker push
       uses: elgohr/Publish-Docker-Github-Action@master
+      env:
+        version: ${{ github.sha }}
       with:
         name: la3mmchen/marius
         username: ${{ secrets.dockerhubuser }}
         password: ${{ secrets.dockerhub }}
+        buildargs: version
