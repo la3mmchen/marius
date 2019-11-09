@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: go build
-        run: go build -o marius -ldflags "-X main.GitCommit=$ {{ github.sha }}" .
+        run: go build -o ./marius -ldflags "-X main.GitCommit=${{ github.sha }}" .
       - name: run executable
         run: ./marius --help
 
