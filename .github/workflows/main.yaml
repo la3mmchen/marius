@@ -43,9 +43,9 @@ jobs:
     - name: docker push
       uses: elgohr/Publish-Docker-Github-Action@master
       env:
-        version: ${{ github.sha }}
+        app_version: ${{ github.sha }}
       with:
         name: la3mmchen/marius
         username: ${{ secrets.dockerhubuser }}
         password: ${{ secrets.dockerhub }}
-        buildargs: version
+        buildargs: app_version

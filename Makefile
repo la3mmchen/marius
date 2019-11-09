@@ -18,7 +18,7 @@ build:
 
 .PHONY: docker
 docker: 
-	docker build --build-arg version=$(GIT_COMMIT) -t ${PROJECT}/${PROJECT_NAME}:${GIT_COMMIT} .
+	docker build --build-arg app_version=$(GIT_COMMIT) -t ${PROJECT}/${PROJECT_NAME}:${GIT_COMMIT} .
 	docker tag ${PROJECT}/${PROJECT_NAME}:${GIT_COMMIT} ${PROJECT}/${PROJECT_NAME}:latest
 
 run-help:
