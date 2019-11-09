@@ -1,15 +1,27 @@
 name: docker image
 on: [push]
+
 jobs:
 
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v1
     - name: docker build
       run: docker build --build-arg version=$(GIT_COMMIT) --file Dockerfile --tag la3mmchen/marius:latest .
-
     - name: run app
-      run: docker run --rm -it la3mmchen/marius:latest
+      run: docker run --rm -t la3mmchen/marius:latest
+  
+  publish:
+    on: 
+      push:
+        branchens:
+          - master
+    runs-on: ubuntu-latest
+    steps:
+    - name: docker push
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: la3mmchen/marius
+        username: ${{ secrets.dockerhubuser }}
+        password: ${{ secrets.dockerhub }}
