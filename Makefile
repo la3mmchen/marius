@@ -1,7 +1,7 @@
 #!make
 include properties.env
 export $(shell sed 's/=.*//' properties.env)
-GIT_COMMIT := $(shell git rev-parse --short HEAD)
+GIT_COMMIT := $(shell git rev-parse HEAD)
 PROJECT_NAME := $(shell basename "$$PWD")
 
 .DEFAULT_GOAL := default
@@ -14,7 +14,7 @@ default: build run-help run-template
 
 .PHONY: build
 build: 
-	@go build -o ${EXECUTABLE} -ldflags "-X main.GitCommit=${GIT_COMMIT}" .
+	@go build -o ${EXECUTABLE} -ldflags "-X main.AppVersion=${GIT_COMMIT}" .
 
 .PHONY: docker
 docker: 

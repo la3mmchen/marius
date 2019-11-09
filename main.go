@@ -11,14 +11,15 @@ import (
 
 var (
 	configFile string = "config.json"
-	gitCommit  string
+	// AppVersion Version of the app. Must be injected during the build.
+	AppVersion string
 )
 
 func main() {
 	var Cfg = types.Configuration{
 		AppUsage:     "Create templates for unit test from existing prometheus alert rules.",
 		AppName:      "marius",
-		AppVersion:   gitCommit,
+		AppVersion:   AppVersion,
 		DataPath:     "data",
 		TemplatePath: "config/template.tpl",
 		OutputPath:   "data/tests",
