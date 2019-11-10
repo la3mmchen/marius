@@ -1,7 +1,7 @@
 #!make
 include properties.env
 export $(shell sed 's/=.*//' properties.env)
-GIT_COMMIT := $(shell git rev-parse HEAD)
+GIT_COMMIT := $(shell git describe --always --long --dirty)
 PROJECT_NAME := $(shell basename "$$PWD")
 
 .DEFAULT_GOAL := default
