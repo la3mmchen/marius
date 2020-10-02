@@ -2,6 +2,9 @@ package commands
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 
 	"github.com/la3mmchen/marius/internal/parse"
 	"github.com/la3mmchen/marius/internal/types"
@@ -48,6 +51,19 @@ func template(cfg types.Configuration) cli.Command {
 	}
 
 	cmd.Action = func(c *cli.Context) error {
+		// check if a template file is provided
+		if _, err := os.Stat(TemplatePath); os.IsNotExist(err) {
+			os.MkdirAll("tmp", os.ModePerm)
+
+			err := ioutil.WriteFile(filepath.Join("tmp", "template.tpl"), []byte("random"), 0755)
+
+			TemplatePath = filepath.Join("tmp", "template.tpl")
+			if err != nil {
+				return err
+			}
+
+		}
+
 		fmt.Printf("Creating templates from rules in [%v] and write to [%v] \n", RulesPath, OutPath)
 		ruleFiles, err := parse.PopulateFromPath(cfg, RulesPath)
 
