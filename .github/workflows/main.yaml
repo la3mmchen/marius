@@ -34,18 +34,32 @@ jobs:
       run: docker run --rm -t la3mmchen/marius:latest --version
 
   publish:
-    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1 
     - name: print commit sha
       run: echo ${{ github.sha }}
-    - name: docker push
-      uses: elgohr/Publish-Docker-Github-Action@master
-      env:
-        app_version: ${{ github.sha }}
+    - name: push the image
+      uses: mr-smithers-excellent/docker-build-push@v4
       with:
-        name: la3mmchen/marius
-        username: ${{ secrets.dockerhubuser }}
-        password: ${{ secrets.dockerhub }}
-        buildargs: app_version
+        tag: ${{ github.GITHUB_REF }}
+        image: la3mmchen/marius
+        registry: ghcr.io
+        username: ${{ github.ACTOR }}
+        password: ${{ secrets.PUSHTOKEN }}
+
+  publish-latest:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1 
+    - name: print commit sha
+      run: echo ${{ github.sha }}
+    - name: push the image
+      uses: mr-smithers-excellent/docker-build-push@v4
+      with:
+        tag: lastest
+        image: la3mmchen/marius
+        registry: ghcr.io
+        username: ${{ github.ACTOR }}
+        password: ${{ secrets.PUSHTOKEN }} 

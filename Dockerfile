@@ -9,5 +9,5 @@ RUN adduser -S -D -H -h /app appuser
 USER appuser
 COPY --from=builder /build/main /app/
 WORKDIR /app
-ENTRYPOINT [ "./main" ]
+ENTRYPOINT [ "./main", "--config" ]
 CMD ["--help"]
